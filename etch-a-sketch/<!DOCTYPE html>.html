@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Grid</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 400px;
+            height: 400px;
+            border: 2px solid black;
+        }
+        .square {
+            border: 1px solid #ccc;
+            background-color: white;
+            opacity: 1;
+            box-sizing: border-box; /* Ensures borders are included in width/height */
+        }
+        button {
+            margin-bottom: 10px;
+            padding: 5px 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <button onclick="setGridSize()">Set Grid Size</button>
+    <div class="container"></div>
+    <script>
+        const container = document.querySelector('.container');
+        let gridSize = 16;
+
+        function createGrid(size) {
+            container.innerHTML = '';
+            const squareSize = (400 / size) - 2 + 'px'; // Adjust for border size
+            
+            for (let i = 0; i < size * size; i++) {
+                const square = document.createElement('div');
+                square.classList.add('square');
+                square.style.width = squareSize;
+                square.style.height = squareSize;
+                square.dataset.darkness = 0;
+                
+                square.addEventListener('mouseover', () => {
+                    let darkness = parseInt(square.dataset.darkness);
+                    if (darkness < 10) {
+                        darkness++;
+                        square.dataset.darkness = darkness;
+                    }
+                    const randomColor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+                    square.style.backgroundColor = randomColor;
+                    square.style.opacity = 1 - (darkness * 0.1);
+                });
+                
+                container.appendChild(square);
+            }
+        }
+
+        function setGridSize() {
+            let newSize = prompt("Enter new grid size (max 100):", gridSize);
+            newSize = parseInt(newSize);
+            if (newSize > 0 && newSize <= 100) {
+                gridSize = newSize;
+                createGrid(gridSize);
+            } else {
+                alert("Please enter a number between 1 and 100.");
+            }
+        }
+
+        createGrid(gridSize);
+    </script>
+</body>
+</html>
